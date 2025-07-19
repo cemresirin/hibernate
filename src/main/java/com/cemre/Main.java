@@ -13,17 +13,41 @@ public class Main {
         try {
             transaction = session.beginTransaction();
 
-            Student student = new Student("Cemre" , "Şirin");;
-            session.persist(student);
+            //CREATE
+        //   Student student = new Student("Cemre" , "Şirin");;
+        //   session.persist(student);
+
+            //READ
+            Student student=session.get(Student.class,1);
+            if (student !=null) {
+                System.out.println("Öğrenci adı:"+ student.getName());
+            }else {
+                System.out.println("Öğrenci bulunamadı");
+            }
+
+            //UPDATE
+            Student studentUpdate =session.get(Student.class,1);
+            if (studentUpdate !=null) {
+                studentUpdate.setName("Ceylin" );
+                studentUpdate.setLastName("Bal");
+                session.update(studentUpdate);
+            }
+
+            //DELETE
+            Student studentDelete = session.get(Student.class,2);
+            if (studentDelete !=null) {
+                session.delete(studentDelete);
+                System.out.println("Öğrenci silindi:" +studentDelete.getName());
+            }else {
+                System.out.println("Silinecek öğrenci bulunamadı");
+            }
 
             transaction.commit();
-            System.out.println("Veri başarıyla eklendi");
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             e.printStackTrace();
         } finally {
             session.close();
-
             HibernateUtil.shutdown();
         }
     }
